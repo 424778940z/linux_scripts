@@ -104,23 +104,25 @@ echo -e "$root_passwd\n$root_passwd" | passwd root
 
 #pacaur
 pacman -Syu
-pacman -S binutils make gcc fakeroot pkg-config --noconfirm --needed
-pacman -S expac jq gtest gmock meson git --noconfirm --needed
+pacman -S binutils make cmake gcc fakeroot pkg-config --noconfirm --needed
+pacman -S expac jq gtest gmock fmt nlohmann-json meson git --noconfirm --needed
 
 mkdir -p /tmp/pacaur_install
 cd /tmp/pacaur_install
 chmod 777 .
 
 if [ ! -n "$(pacman -Qs auracle-git)" ]; then
-    curl -o PKGBUILD https://aur.archlinux.org/cgit/aur.git/plain/PKGBUILD?h=auracle-git
+    curl -o PKGBUILD "https://aur.archlinux.org/cgit/aur.git/plain/PKGBUILD?h=auracle-git"
     su $usr_name -c "makepkg PKGBUILD --skippgpcheck"
-	pacman -U auracle-git-*.tar.xz --noconfirm
+	#they changed .xz to .zst, it's getting annoying, so im just using * here
+    pacman -U auracle-git-*.tar.* --noconfirm
 fi
 
 if [ ! -n "$(pacman -Qs pacaur)" ]; then
-    curl -o PKGBUILD https://aur.archlinux.org/cgit/aur.git/plain/PKGBUILD?h=pacaur
+    curl -o PKGBUILD "https://aur.archlinux.org/cgit/aur.git/plain/PKGBUILD?h=pacaur"
     su $usr_name -c "makepkg PKGBUILD"
-	pacman -U pacaur-*.tar.xz --noconfirm
+	#they changed .xz to .zst, it's getting annoying, so im just using * here
+    pacman -U pacaur-*.tar.* --noconfirm
 fi
 
 cd ~
